@@ -1,65 +1,44 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-double f1(double);
-double f2(double, double);
-int main()
+#include <string.h>
+
+#define SIZE 256
+#define WORDS 30
+#define DELIMS ",. "
+
+int main(void)
 {
-    double a = -M_PI, b = M_PI, h = 0.1;
+    char str[SIZE] = "", *ptr = NULL, *word[WORDS] = { NULL };
+    size_t counter = 0, i, j, flag;
 
-    printf("*************** Part 1 ***************\n");
-
-    printf("x:\t");
-    for (double x = a; x <= b; x += h) {
-        char c = x + h < b ? '\t' : '\n';
-        printf("%.3f%c", f1(x), c);
+    printf("Enter the string: ");
+    if (scanf("%255[^\n]", str) == 1 && fgetc(stdin) == '\n')
+    {
+    for (
+            ptr = strtok(str, DELIMS);
+            ptr != NULL && counter < WORDS;
+            ++counter, ptr = strtok(NULL, DELIMS)
+        )
+    {
+        word[counter] = ptr;
     }
 
-    printf("y:\t");
-    for (double x = a; x <= b; x += h) {
-        char c = x + h < b ? '\t' : '\n';
-        printf("%.3f%c", f1(x), c);
-    }
-
-    printf("**************************************\n");
-
-    printf("*************** Part 2 ***************\n");
-
-    double a1=-3, b1 =3, h1 = 0.25;
-    double c1=1, d1 = 2, h2 = 0.15;
-    printf("y\\x\t");
-    for (double x = a1; x <= b1; x += h1) {
-        char c = x + h1 < b1 ? '\t' : '\n';
-        printf("%.3f%c", x, c);
-    }
-
-    for (double y = c1; y <= d1; y += h2) {
-        printf("%.3f\t", y);
-        for (double x = a1; x <= b1; x += h1) {
-            char c = x + h1 < b1 ? '\t' : '\n';
-            printf("%.3f%c", f2(x, y), c);
+    printf("Unique words:\t");
+    for (i = 0; i < counter; ++i)
+    {
+        flag = 0;
+        for (j = 0; j < counter; ++j)
+        {
+        if (i != j && strcmp(word[i], word[j]) == 0)
+            {
+            flag = 1;
+            break;
+            }
         }
+
+        if (flag == 0)
+            printf("%s\t", word[i]);
+    }
     }
 
-    printf("**************************************\n");
     return 0;
 }
-
-double f1(double x) {
-    if (x <= -M_PI_2) {
-        return sin(2)*cos(x/2);
-    }
-        if (x > -M_PI_2 && x <= M_PI_2) {
-            return fabs(x-M_PI_2);
-        }
-        if (x>M_PI_2){
-            return (x-1)/(2+pow(x,1.0/2));
-        }
-}
-
-double f2(double x, double y) {
-    return (pow(x(y+1),1.0/2)/(x-y));
-}
-
-
-
